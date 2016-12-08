@@ -1,19 +1,20 @@
 /*
- *  %{Cpp:License:FileName}
+ *  Main.cpp
  *
  *  Created on: 01 Dec, 2016
  *      Author: Renat
  *
  */
+
 #include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include "App.hpp"
 
 int main(int argc, char *argv[])
 {
 	QGuiApplication app(argc, argv);
 
-	QQmlApplicationEngine engine;
-	engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+	App a;
+	a.run();
 
 	return app.exec();
 }
