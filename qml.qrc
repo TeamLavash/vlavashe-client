@@ -1,6 +1,50 @@
 <RCC>
     <qresource prefix="/">
+        <file>images/+material/drawer.png</file>
+        <file>images/+material/drawer@2x.png</file>
+        <file>images/+material/drawer@3x.png</file>
+        <file>images/+material/drawer@4x.png</file>
+        <file>images/+material/menu.png</file>
+        <file>images/+material/menu@2x.png</file>
+        <file>images/+material/menu@3x.png</file>
+        <file>images/+material/menu@4x.png</file>
+        <file>images/arrow.png</file>
+        <file>images/arrow@2x.png</file>
+        <file>images/arrow@3x.png</file>
+        <file>images/arrow@4x.png</file>
+        <file>images/arrows.png</file>
+        <file>images/arrows@2x.png</file>
+        <file>images/arrows@3x.png</file>
+        <file>images/arrows@4x.png</file>
+        <file>images/drawer.png</file>
+        <file>images/drawer@2x.png</file>
+        <file>images/drawer@3x.png</file>
+        <file>images/drawer@4x.png</file>
+        <file>images/menu.png</file>
+        <file>images/menu@2x.png</file>
+        <file>images/menu@3x.png</file>
+        <file>images/menu@4x.png</file>
+        <file>images/shawa.png</file>
         <file>main.qml</file>
-        <file>MainForm.ui.qml</file>
+        <file>pages/AddNewShawa.qml</file>
+        <file>pages/FavouritePage.qml</file>
+        <file>pages/ProfilePage.qml</file>
+        <file>pages/ProfileSignInPage.qml</file>
+        <file>pages/ShawaOnMap.qml</file>
+        <file>main.cpp</file>
+        <file>pages/EnterSignIn.qml</file>
+        <file>pages/Login.qml</file>
+        <file>pages/More.qml</file>
+        <file>images/spb.png</file>
+        <file>images/zaxar.png</file>
+        <file>images/user.png</file>
+        <file>GuiState.qml</file>
+        <file>pages/FavouritePageItem.qml</file>
+        <file>images/add.png</file>
+        <file>images/camera.png</file>
+        <file>AddShawarmaInfo.qml</file>
+        <file>Marker.qml</file>
+        <file>pages/ShawarmaMap.qml</file>
+        <file>images/marker.png</file>
     </qresource>
 </RCC>

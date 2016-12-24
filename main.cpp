@@ -1,19 +1,30 @@
-/*
- *  %{Cpp:License:FileName}
- *
- *  Created on: 01 Dec, 2016
- *      Author: Renat
- *
- */
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QSettings>
+#include <QQuickStyle>
+#include <QtCore/QUrl>
 
 int main(int argc, char *argv[])
 {
-	QGuiApplication app(argc, argv);
+    QGuiApplication::setApplicationName("VLavashe");
+    QGuiApplication::setOrganizationName("LavashTeam");
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-	QQmlApplicationEngine engine;
-	engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    QGuiApplication app(argc, argv);
 
-	return app.exec();
+
+    QSettings settings;
+    QString style = QQuickStyle::name();
+    if (!style.isEmpty())
+        settings.setValue("style", style);
+    else
+        QQuickStyle::setStyle(settings.value("style").toString());
+
+    QQmlApplicationEngine engine;
+    engine.load(QUrl("qrc:/main.qml"));
+    if (engine.rootObjects().isEmpty())
+        return -1;
+
+    return app.exec();
 }
