@@ -14,16 +14,17 @@ Map {
 	center: locationSpb
 
 	property variant locationSpb: QtPositioning.coordinate(59.9343, 30.3351)
+	property var markers: []
 
 	Plugin {
 		id: mapPlugin
 		name: "mapbox"
 		PluginParameter {
-			name: "mapbox.access_token";
+			name: "mapbox.access_token"
 			value: "pk.eyJ1Ijoia29ybWljayIsImEiOiJjaXc3MWgwbG0wMDAxMnpwcWh1bGpyc2Z4In0.fHHDFBcWFuTcJQ7CqrqXlg"
 		}
 		PluginParameter {
-			name: "mapbox.map_id";
+			name: "mapbox.map_id"
 			value: "examples.map-zr0njcqy"
 		}
 	}
@@ -39,11 +40,58 @@ Map {
 		}
 	}
 
+	Pane {
+		z: map.z + 3
+
+		anchors.top: parent.top
+		anchors.horizontalCenter: parent.horizontalCenter
+
+		Row {
+			spacing: 5
+
+			TextField {
+				id: searchField
+
+				width: map.width * 0.8
+
+				placeholderText: "Поиск"
+			}
+
+			Image {
+				id: searchImage
+
+				height: searchField.height
+
+				source: "qrc:/images/search.png"
+				fillMode: Image.PreserveAspectFit
+
+				MouseArea {
+					id: searchImageMouseArea
+
+					anchors.fill: parent
+
+					onClicked: {
+						onSearchButtonClicked(searchField.text)
+					}
+				}
+			}
+		}
+	}
+
 	function addMarker(coords) {
 		var newMarker = Qt.createComponent("qrc:/Marker.qml")
 		var object = newMarker.createObject(map)
-		object.setLocation(coords)
-		object.setText("TEXT")
+		object.setData(markers.length, coords, "TEXT")
+		object.markerClicked.connect(onMarkerClicked)
+		markers.push(object)
 		map.addMapItem(object)
+	}
+
+	function onMarkerClicked(mId) {
+		print("Marker " + mId + " clicked")
+	}
+
+	function onSearchButtonClicked(text) {
+		print("Searching " + text)
 	}
 }

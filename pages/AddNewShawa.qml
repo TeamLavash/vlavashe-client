@@ -1,28 +1,38 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Styles 1.4
 import QtQuick.Window 2.1
 
 import "qrc:/"
+import "qrc:/struct"
 
-//Flickable {
-//	id: flickable
-//	contentHeight: pane.height
+Flickable {
+	id: flickable
 
-//	AddShawarmaInfo { id: shawarmaInfo }
+	contentHeight: pane.height
+	boundsBehavior: Flickable.StopAtBounds
+
+	AddShawarmaInfo {
+		id: shawarmaInfo
+		sizeRating: 0.5
+		cleanRating: 0.5
+		conditionRating: 0.5
+		price: 120
+	}
 
 	Pane {
 		id: pane
 
-		width: parent.width
-		height: parent.height
-		spacing: 50
-
-		AddShawarmaInfo { id: shawarmaInfo }
+		width: flickable.width
+		height: flickable.height
+		spacing: 30
 
 		Column {
 			id: ratesColumns
 			width: parent.width
 			height: parent.height
+
+			anchors.horizontalCenter: parent.horizontalCenter
 
 			Image {
 				id: photoImage
@@ -34,6 +44,16 @@ import "qrc:/"
 				fillMode: Image.Pad
 
 				anchors.horizontalCenter: parent.horizontalCenter
+
+				MouseArea {
+					id: photoImageMouseArea
+
+					anchors.fill: parent
+
+					onClicked: {
+						print("Photo button clicked")
+					}
+				}
 			}
 
 			TextField {
@@ -202,8 +222,17 @@ import "qrc:/"
 
 				onClicked: {
 					// TODO send info
+					print("Adding shawarma with: ")
+					print("Name: " + shawarmaInfo.name)
+					print("Address: " + shawarmaInfo.address)
+					print("Coordinates: " + shawarmaInfo.coords)
+					print("Size rating: " + shawarmaInfo.sizeRating.toFixed(1))
+					print("Clean rating: " + shawarmaInfo.cleanRating.toFixed(1))
+					print("Condition rating: " + shawarmaInfo.conditionRating.toFixed(1))
+					print("Price: " + shawarmaInfo.price.toString())
+					print("Comment: " + shawarmaInfo.comment)
 				}
 			}
 		}
 	}
-//}
+}

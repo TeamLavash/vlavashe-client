@@ -5,7 +5,7 @@ MapQuickItem {
     id: marker
 
 	anchorPoint.x: markerImage.width * 0.5
-	anchorPoint.y: markerImage.height
+	anchorPoint.y: markerImage.height - 1
 
     sourceItem: Image {
         id: markerImage
@@ -19,6 +19,7 @@ MapQuickItem {
 
 			onClicked: {
 				print("Clicked on marker: ", coordinate)
+				markerClicked(mId)
 			}
         }
 
@@ -34,11 +35,13 @@ MapQuickItem {
         }
     }
 
-    function setLocation(coords) {
-        coordinate = coords
-    }
+	signal markerClicked(int mId)
 
-    function setText(t) {
-        text.text = t
-    }
+	property int mId
+
+	function setData(id, coords, txt) {
+		mId = id
+		coordinate = coords
+		text.text = txt
+	}
 }

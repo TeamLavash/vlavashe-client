@@ -8,6 +8,7 @@ import QtQuick.Window 2.1
 import QtPositioning 5.3
 
 import "qrc:/pages"
+import "qrc:/struct"
 
 ApplicationWindow {
     id: window
@@ -88,6 +89,7 @@ ApplicationWindow {
             anchors.fill: parent
 
             delegate: ItemDelegate {
+				id: listViewDelegate
                 width: parent.width
                 text: model.title
                 highlighted: ListView.isCurrentItem
@@ -102,6 +104,7 @@ ApplicationWindow {
             }
 
             model: ListModel {
+				id: listModel
 				ListElement { title: "Карта";            source: "map"         }
 				ListElement { title: "Профиль";          source: "profile"     }
 				ListElement { title: "Избранное";        source: "favourite"   }
@@ -116,88 +119,96 @@ ApplicationWindow {
         }
     }
 
-    AddNewShawa {
-        id: addNewShawaPage
-    }
+	Item {
+		id: pageContainer
+		visible: false
 
-    EnterSignIn {
-        id: enterSignInPage
+		ShawarmaMap {
+			id: map
+		}
 
-        buttonEnter.onClicked: {
-            stackView.setItem("enter")
-        }
+		Profile {
+			id: profilePage
+		}
 
-        buttonSignIn.onClicked: {
-            stackView.setItem("signIn")
-        }
-    }
+		SignUpSignIn {
+			id: signUpSignInPage
 
-    FavouritePage {
-        id: favouritePagePage
+			signUpButton.onClicked: {
+				stackView.setItem("signUp")
+			}
 
-        function onMoreActivated(id) {
-            print(id, " activated")
-            stackView.setItem("more")
-            // TODO send request for ext info
-        }
-    }
+			signInButton.onClicked: {
+				stackView.setItem("signIn")
+			}
+		}
 
-    Login {
-        id: loginPage
-    }
+		SignIn {
+			id: signInPage
 
-    More {
-        id: morePage
-    }
+			signInButton.onClicked: {
+				print("Signing in with " + signInData.login + " / " + signInData.password)
+			}
+		}
 
-    ProfilePage {
-        id: profilePagePage
-    }
+		SignUp {
+			id: signUpPage
 
-    ProfileSignInPage {
-        id: profileSignInPagePage
-    }
+			signUpButton.onClicked: {
+				print(signUpPage.signUpData)
+			}
+		}
 
-//    ShawaOnMap {
-//        id: shawaOnMapPage
-//    }
+		Favourite {
+			id: favouritePage
 
-	ShawarmaMap {
-		id: map
+			function onMoreActivated(id) {
+				print(id, " activated")
+				stackView.setItem("more")
+				// TODO send request for ext info
+			}
+		}
+
+		More {
+			id: morePage
+		}
+
+		AddNewShawa {
+			id: addNewShawaPage
+		}
 	}
 
-    property alias stackView: stackView
     StackView {
         id: stackView
         anchors.fill: parent
 
-        function setItem(name) {
-            if (name === "profile") {
-                if (guiState.loggedIn) {
-                    stackView.replace(profilePagePage)
-                } else {
-                    setItem("enterSignIn")
-                }
-            } else if (name === "enterSignIn") {
-                stackView.replace(enterSignInPage)
-            } else if (name === "enter") {
-                stackView.replace(loginPage)
-                listView.resetIndex()
-            } else if (name === "signIn") {
-                stackView.replace(profileSignInPagePage)
-                listView.resetIndex()
-            } else if (name === "favourite") {
-                stackView.replace(favouritePagePage)
+		function setItem(name) {
+			if (name === "profile") {
+				if (guiState.loggedIn) {
+					stackView.replace(profilePage)
+				} else {
+					setItem("signUpSignIn")
+				}
+			} else if (name === "signUpSignIn") {
+				stackView.replace(signUpSignInPage)
+				listView.resetIndex()
+			} else if (name === "signUp") {
+				stackView.replace(signUpPage)
+				listView.resetIndex()
+			} else if (name === "signIn") {
+				stackView.replace(signInPage)
+				listView.resetIndex()
+			} else if (name === "favourite") {
+				stackView.replace(favouritePage)
 
-				// fake data
-                favouritePagePage.addFavourite("qwe", "asd", "zxc")
-            } else if (name === "addNewShawa") {
-                stackView.replace(addNewShawaPage)
-            } else if (name === "more") {
-                stackView.replace(morePage)
-                listView.resetIndex()
+				favouritePage.addFavourite("qwe", "asd", "zxc")
+			} else if (name === "more") {
+				stackView.replace(morePage)
+				listView.resetIndex()
 			} else if (name === "map") {
 				stackView.replace(map)
+			} else if (name === "addNewShawa") {
+				stackView.replace(addNewShawaPage)
 			}
         }
 

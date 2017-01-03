@@ -23,15 +23,18 @@ FORMS +=
 HEADERS +=
 
 DISTFILES += \
-    pages/ProfilePage.qml \
     pages/FavouritePage.qml \
     pages/ShawaOnMap.qml \
-    pages/ProfileSignInPage.qml \
-    pages/Login.qml \
-    pages/EnterSignIn.qml \
+    pages/SignIn.qml \
+    pages/SignUpSignIn.qml \
     pages/More.qml \
     GuiState.qml \
     pages/FavouritePageItem.qml \
     AddShawarmaInfo.qml \
     Marker.qml \
-    pages/ShawarmaMap.qml
+    pages/ShawarmaMap.qml \
+    struct/AddShawarmaInfo.qml \
+    struct/GuiState.qml \
+    pages/Profile.qml \
+    pages/SignUp.qml \
+    struct/SignUpData.qml

@@ -4,4 +4,5 @@ Item {
 	id: guiState
 
 	property bool loggedIn: false
+	property bool admin: false
 }
