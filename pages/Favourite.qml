@@ -24,7 +24,7 @@ ListView {
 
 				itemId: id
 				nameText.text: name
-				addressText.text: address
+				addressText.text: road + ", " + house
 				priceText.text: "Стоимость обычной в лаваше: " + price
 
 				onMoreActivated: {
@@ -41,8 +41,11 @@ ListView {
 		id: listModel
 	}
 
-	function addFavourite(name, address, price) {
-		listModel.append({"id": listModel.count, "name": name, "address": address, "price":price})
+	function setData(data) {
+		listModel.clear()
+		for (var i = 0; i < data.length; i++) {
+			listModel.append(data[i])
+		}
 	}
 
 	function onMoreActivated(id) {

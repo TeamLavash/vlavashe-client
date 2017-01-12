@@ -1,6 +1,5 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.0
-import "qrc:/struct"
 
 Pane {
     id: pane
@@ -8,10 +7,10 @@ Pane {
     height: parent.height
 
 	property alias signInButton: signInButton
-	property alias signInData: signInData
 
-	SignInData {
-		id: signInData
+	property var signInData: {
+		"name": "",
+		"password": ""
 	}
 
 	Column {
@@ -28,7 +27,7 @@ Pane {
 			placeholderText: "Логин"
 
 			onTextChanged: {
-				signInData.login = text
+				signInData.name = text
 			}
 		}
 
@@ -52,5 +51,54 @@ Pane {
 
 			text: qsTr("Войти")
 		}
+
+		Label {
+			id: resultLabel
+
+			anchors.horizontalCenter: parent.horizontalCenter
+
+			horizontalAlignment: Text.AlignHCenter
+
+			opacity: 0.0
+			SequentialAnimation {
+				id: resultAnimation
+				running: false
+				NumberAnimation { target: resultLabel; property: "opacity"; to: 1.0; duration: 1000 }
+			}
+		}
+	}
+
+	function validate() {
+		var err = ""
+		var res = true
+
+		if (signInData.name == "") {
+			err += "Имя не указано.\n"
+			res = false
+		}
+		if (signInData.password == "") {
+			err += "Пароль не указан.\n"
+			res = false
+		}
+
+		setResult(err)
+		return res
+	}
+
+	function reset() {
+		loginField.text = ""
+		passwordField.text = ""
+		resultLabel.text = ""
+	}
+
+	function setResult(result) {
+		resultAnimation.stop()
+		resultLabel.opacity = 0.0
+		resultLabel.text = result
+		resultAnimation.start()
+	}
+
+	function getData() {
+		return JSON.stringify(signInData)
 	}
 }

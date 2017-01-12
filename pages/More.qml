@@ -7,7 +7,10 @@ Flickable {
 	contentHeight: column.height
 	boundsBehavior: Flickable.StopAtBounds
 
-//	property alias comments: comments
+	property alias favouriteButton: favouriteButton
+	property alias commentButton: commentButton
+	property alias onMapButton: onMapButton
+	property var info
 
 	Column {
 		id: column
@@ -57,40 +60,12 @@ Flickable {
 			anchors.horizontalCenter: parent.horizontalCenter
 
 			Label {
-				id: sizeRatingLabel
-				text: qsTr("Размер: ")
+				id: ratingLabel
+				text: qsTr("Рейтинг: ")
 			}
 
 			Label {
-				id: sizeRatingValueLabel
-				text: qsTr("Unknown rating")
-			}
-		}
-
-		Row {
-			anchors.horizontalCenter: parent.horizontalCenter
-
-			Label {
-				id: cleanRatingLabel
-				text: qsTr("Чистота: ")
-			}
-
-			Label {
-				id: cleanRatingValueLabel
-				text: qsTr("Unknown rating")
-			}
-		}
-
-		Row {
-			anchors.horizontalCenter: parent.horizontalCenter
-
-			Label {
-				id: conditionRatingLabel
-				text: qsTr("Обстановка: ")
-			}
-
-			Label {
-				id: conditionRatingValueLabel
+				id: ratingValueLabel
 				text: qsTr("Unknown rating")
 			}
 		}
@@ -111,11 +86,67 @@ Flickable {
 			}
 		}
 
-//		CommentWidget {
-//			id: comments
+		Button {
+			id: favouriteButton
 
-//			anchors.top: priceRow.bottom
-//			anchors.topMargin: 30
-//		}
+			width: parent.width * 0.2
+			height: width
+
+			anchors.horizontalCenter: parent.horizontalCenter
+
+			background: Image {
+				id: buttonImage
+				source: "qrc:/images/favourite_disabled.png"
+				anchors.left: favouriteButton.left
+				anchors.right: favouriteButton.right
+				anchors.top: favouriteButton.top
+				anchors.bottom: favouriteButton.bottom
+
+				fillMode: Image.PreserveAspectFit
+			}
+		}
+
+		Row {
+			anchors.horizontalCenter: parent.horizontalCenter
+
+			spacing: 50
+
+			Button {
+				id: commentButton
+
+				text: qsTr("Отзывы")
+			}
+
+			Button {
+				id: onMapButton
+
+				text: qsTr("На карте")
+			}
+		}
+	}
+
+	function isFavourite() {
+		return info.favourite
+	}
+
+	function setData(data) {
+		info = data
+
+		nameLabel.text = data.name
+		addressLabel.text = data.road + ", " + data.house
+		ratingValueLabel.text = data.rating.toString()
+		priceValueLabel.text = data.price.toString()
+
+		setState(data.favourite)
+	}
+
+	function setState(enable) {
+		if (enable) {
+			buttonImage.source = "qrc:/images/favourite_enabled.png"
+			info.favourite = true
+		} else {
+			buttonImage.source = "qrc:/images/favourite_disabled.png"
+			info.favourite = false
+		}
 	}
 }

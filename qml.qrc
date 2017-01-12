@@ -7,7 +7,7 @@
         <file>pages/AddNewShawa.qml</file>
         <file>pages/Favourite.qml</file>
         <file>pages/ShawaOnMap.qml</file>
-        <file>main.cpp</file>
+        <file>Main.cpp</file>
         <file>pages/SignUpSignIn.qml</file>
         <file>pages/SignIn.qml</file>
         <file>pages/More.qml</file>
@@ -16,14 +16,16 @@
         <file>Marker.qml</file>
         <file>pages/ShawarmaMap.qml</file>
         <file>images/marker.png</file>
-        <file>struct/AddShawarmaInfo.qml</file>
-        <file>struct/GuiState.qml</file>
-        <file>struct/SignInData.qml</file>
-        <file>struct/SignUpData.qml</file>
         <file>pages/SignUp.qml</file>
         <file>pages/Profile.qml</file>
-        <file>pages/CommentWidget.qml</file>
         <file>images/search.png</file>
         <file>images/user.png</file>
+        <file>images/favourite_disabled.png</file>
+        <file>images/favourite_enabled.png</file>
+        <file>pages/Comments.qml</file>
+        <file>images/send.png</file>
+        <file>images/back.png</file>
+        <file>CheckMarker.qml</file>
+        <file>SelectMarker.qml</file>
     </qresource>
 </RCC>

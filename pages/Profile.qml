@@ -1,29 +1,45 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.0
 import QtQuick.Window 2.1
+import UserEnum 1.0
 
 Pane {
     id: profilePage
     width: parent.width
     height: parent.height
 
+	property alias logoutButton: logoutButton
+
 	Column {
 		id: column
+
+		width: parent.width * 0.5
 
 		anchors.horizontalCenter: parent.horizontalCenter
 
 		spacing: 20
 
-		Image {
-			id: image
-
+		Rectangle {
 			width: parent.width * 0.5
-			height: parent.height * 0.5
+			height: width
 
 			anchors.horizontalCenter: parent.horizontalCenter
 
-			source: "qrc:/images/user.png"
-			fillMode: Image.PreserveAspectFit
+			border.color: "black"
+			border.width: 1
+
+			Image {
+				id: image
+
+				width: parent.width - 2
+				height: parent.height - 2
+
+				anchors.horizontalCenter: parent.horizontalCenter
+				anchors.verticalCenter: parent.verticalCenter
+
+				source: "qrc:/images/user.png"
+				fillMode: Image.PreserveAspectFit
+			}
 		}
 
 		Text {
@@ -45,11 +61,20 @@ Pane {
 		}
 
 		Button {
-			id: signDownButton
+			id: logoutButton
 
 			anchors.horizontalCenter: parent.horizontalCenter
 
 			text: qsTr("Выйти")
+		}
+	}
+
+	function setData(data) {
+		nameText.text = data.name
+		if (data.status == User.USER) {
+			statusText.text = "User"
+		} else {
+			statusText.text = "Admin"
 		}
 	}
 }

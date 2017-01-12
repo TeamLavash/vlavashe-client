@@ -4,7 +4,6 @@ import QtQuick.Controls.Styles 1.4
 import QtQuick.Window 2.1
 
 import "qrc:/"
-import "qrc:/struct"
 
 Flickable {
 	id: flickable
@@ -12,12 +11,15 @@ Flickable {
 	contentHeight: pane.height
 	boundsBehavior: Flickable.StopAtBounds
 
-	AddShawarmaInfo {
-		id: shawarmaInfo
-		sizeRating: 0.5
-		cleanRating: 0.5
-		conditionRating: 0.5
-		price: 120
+	property alias addButton: addButton
+	property alias onMapButton: onMapButton
+	property var shawarmaInfo: {
+		"name": "",
+		"road": "",
+		"house": "",
+		"x": 0.0,
+		"y": 0.0,
+		"price": 120
 	}
 
 	Pane {
@@ -33,6 +35,8 @@ Flickable {
 			height: parent.height
 
 			anchors.horizontalCenter: parent.horizontalCenter
+
+			spacing: 10
 
 			Image {
 				id: photoImage
@@ -71,101 +75,59 @@ Flickable {
 				}
 			}
 
-			TextField {
-				id: addressField
-
-				width: parent.width / 2
-
-				placeholderText: qsTr("Адрес")
-				font.pixelSize: 12
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
-
+			Row {
 				anchors.horizontalCenter: parent.horizontalCenter
 
-				onTextChanged: {
-					shawarmaInfo.address = addressField.text
+				spacing: 10
+
+				RadioButton {
+					id: addressRadioButton
+
+					checked: true
+
+					onCheckedChanged: {
+						addressField.enabled = checked
+						onMapRadioButton.checked = !checked
+					}
+				}
+
+				TextField {
+					id: addressField
+
+					width: parent.width * 0.8
+
+					enabled: true
+
+					placeholderText: qsTr("Адрес")
+					horizontalAlignment: Text.AlignHCenter
+					verticalAlignment: Text.AlignVCenter
 				}
 			}
 
-			Button {
-				id: addressButton
-
-				text: qsTr("На карте")
-
+			Row {
 				anchors.horizontalCenter: parent.horizontalCenter
 
-				onClicked: {
-					// TODO call map interface
+				spacing: 10
+
+				RadioButton {
+					id: onMapRadioButton
+
+					checked: false
+
+					onCheckedChanged: {
+						onMapButton.enabled = checked
+						addressRadioButton.checked = !checked
+					}
 				}
-			}
 
-			Text {
-				id: sizeText
+				Button {
+					id: onMapButton
 
-				text: qsTr("Удовлетворенность размером")
-				font.pixelSize: 12
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
+					width: parent.width * 0.8
 
-				anchors.horizontalCenter: parent.horizontalCenter
-			}
+					enabled: false
 
-			Slider {
-				id: sizeSlider
-
-				value: 0.5
-
-				anchors.horizontalCenter: parent.horizontalCenter
-
-				onValueChanged: {
-					shawarmaInfo.sizeRating = sizeSlider.value
-				}
-			}
-
-			Text {
-				id: cleanText
-
-				text: qsTr("Чистота производства")
-				font.pixelSize: 12
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
-
-				anchors.horizontalCenter: parent.horizontalCenter
-			}
-
-			Slider {
-				id: cleanSlider
-
-				value: 0.5
-
-				anchors.horizontalCenter: parent.horizontalCenter
-
-				onValueChanged: {
-					shawarmaInfo.cleanRating = cleanSlider.value
-				}
-			}
-
-			Text {
-				id: conditionText
-
-				text: qsTr("Обстановка заведения")
-				font.pixelSize: 12
-				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
-
-				anchors.horizontalCenter: parent.horizontalCenter
-			}
-
-			Slider {
-				id: conditionSlider
-
-				value: 0.5
-
-				anchors.horizontalCenter: parent.horizontalCenter
-
-				onValueChanged: {
-					shawarmaInfo.conditionRating = conditionSlider.values
+					text: qsTr("На карте")
 				}
 			}
 
@@ -192,47 +154,130 @@ Flickable {
 				anchors.horizontalCenter: parent.horizontalCenter
 
 				onTextChanged: {
-					shawarmaInfo.price = parseInt(priceField.text)
+					if (text == "") {
+						shawarmaInfo.price = 0
+					} else {
+						shawarmaInfo.price = parseInt(priceField.text)
+					}
 				}
 			}
 
-			TextField {
-				id: commentField
+			Row {
+				anchors.horizontalCenter: parent.horizontalCenter
 
-				width: parent.width / 2
+				spacing: 50
 
-				placeholderText: qsTr("Комментарий")
-				font.pixelSize: 12
+				Button {
+					id: addButton
+
+					text: qsTr("Добавить")
+
+					onClicked: {
+						// TODO send info
+						print("Adding shawarma with: ")
+						print("Name: " + shawarmaInfo.name)
+						print("Address: " + shawarmaInfo.road + ", " + shawarmaInfo.house)
+						print("Coordinates: " + shawarmaInfo.coords)
+						print("Price: " + shawarmaInfo.price.toString())
+						print("Comment: " + shawarmaInfo.comment)
+					}
+				}
+
+				Button {
+					id: clearButton
+
+					text: qsTr("Очистить")
+
+					onClicked: {
+						reset()
+					}
+				}
+			}
+
+			Label {
+				id: resultLabel
+
+				anchors.horizontalCenter: parent.horizontalCenter
+
 				horizontalAlignment: Text.AlignHCenter
-				verticalAlignment: Text.AlignVCenter
 
-				anchors.horizontalCenter: parent.horizontalCenter
-
-				onTextChanged: {
-					shawarmaInfo.comment = commentField.text
-				}
-			}
-
-			Button {
-				id: addButton
-
-				text: qsTr("Добавить")
-
-				anchors.horizontalCenter: parent.horizontalCenter
-
-				onClicked: {
-					// TODO send info
-					print("Adding shawarma with: ")
-					print("Name: " + shawarmaInfo.name)
-					print("Address: " + shawarmaInfo.address)
-					print("Coordinates: " + shawarmaInfo.coords)
-					print("Size rating: " + shawarmaInfo.sizeRating.toFixed(1))
-					print("Clean rating: " + shawarmaInfo.cleanRating.toFixed(1))
-					print("Condition rating: " + shawarmaInfo.conditionRating.toFixed(1))
-					print("Price: " + shawarmaInfo.price.toString())
-					print("Comment: " + shawarmaInfo.comment)
+				opacity: 0.0
+				SequentialAnimation {
+					id: resultAnimation
+					running: false
+					NumberAnimation { target: resultLabel; property: "opacity"; to: 1.0; duration: 1000 }
 				}
 			}
 		}
+	}
+
+	function validate() {
+		var err = ""
+		var res = true
+
+		if (shawarmaInfo.name == "") {
+			err += "Имя не указано.\n"
+			res = false
+		}
+		if (shawarmaInfo.road == "" || addressField.text == "") {
+			err += "Адрес не указан.\n"
+			res = false
+		}
+		if ((shawarmaInfo.x == 0 || shawarmaInfo.y == 0)
+				&& (shawarmaInfo.road != "" || addressField.text != "")) {
+			err += "Координаты не указаны.\n"
+			res = false
+		}
+		if (shawarmaInfo.price == 0) {
+			err += "Цена не указана.\n"
+			res = false
+		}
+		setResult(err)
+		return res
+	}
+
+	function reset() {
+		nameField.text = ""
+		addressField.text = ""
+		priceField.text = 120
+		resultLabel.text = ""
+		addressRadioButton.checked = true
+	}
+
+	function setResult(result) {
+		resultAnimation.stop()
+		resultLabel.opacity = 0.0
+		resultLabel.text = result
+		resultAnimation.start()
+	}
+
+	function getData() {
+		return JSON.stringify(shawarmaInfo)
+	}
+
+	function setAddress(data) {
+		addressField.text = data.road + ", " + data.house
+		shawarmaInfo.road = data.road
+		shawarmaInfo.house = data.house
+		shawarmaInfo.x = data.x
+		shawarmaInfo.y = data.y
+	}
+
+	function setCoordinates(data) {
+		print(JSON.stringify(data))
+
+		shawarmaInfo.x = data.x
+		shawarmaInfo.y = data.y
+		addressField.text = data.road + ", " + data.house
+		shawarmaInfo.road = data.road
+		shawarmaInfo.house = data.house
+	}
+
+	function byAddress() {
+		return addressRadioButton.checked
+	}
+
+	function getAddress() {
+		return addressField.text
 	}
 }
