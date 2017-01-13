@@ -6,7 +6,8 @@ CONFIG += c++11
 SOURCES += main.cpp \
     App.cpp \
     User.cpp \
-    db/SomeDataBase.cpp
+    db/SomeDataBase.cpp \
+    ServerApi.cpp
 
 OTHER_FILES += \
     pages/*.qml
@@ -25,7 +26,8 @@ HEADERS += \
     Types.hpp \
     db/DataBase.hpp \
     User.hpp \
-    db/SomeDataBase.hpp
+    db/SomeDataBase.hpp \
+    ServerApi.hpp
 
 DISTFILES += \
     pages/FavouritePage.qml \
@@ -40,4 +42,4 @@ DISTFILES += \
     pages/Profile.qml \
     pages/SignUp.qml \
     CheckMarker.qml \
-    SelectMarker.qml
+    SelectMarker.qml \

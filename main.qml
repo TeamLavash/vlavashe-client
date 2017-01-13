@@ -54,6 +54,7 @@ ApplicationWindow {
 				onClicked: {
 					stackView.pop()
 					titleLabel.text = container.titles[stackView.currentItem.titleId]
+					stackView.currentId = stackView.currentItem.titleId
 				}
 			}
 
@@ -107,7 +108,6 @@ ApplicationWindow {
 				highlighted: ListView.isCurrentItem
 				onClicked: {
 					listView.currentIndex = index
-					titleLabel.text = model.title
 					qmlSignal(model.source, "")
 					drawer.close()
 				}
@@ -155,13 +155,13 @@ ApplicationWindow {
 			function onSelectMarkerClicked(data) {
 				map.setSelection(false)
 				addNewShawaPage.setAddress(data)
-				stackView.push(addNewShawaPage)
+				show(addNewShawaPage)
 			}
 
 			function onCheckMarkerClicked(data) {
 				map.setChecking(false)
 				addNewShawaPage.setCoordinates(data)
-				stackView.push(addNewShawaPage)
+				show(addNewShawaPage)
 
 				if (addNewShawaPage.validate()) {
 					var sData = addNewShawaPage.getData()
@@ -171,8 +171,8 @@ ApplicationWindow {
 
 			function checkFailed() {
 				map.setChecking(false)
-				addNewShawaPage.setResult("Invalid address.")
-				stackView.push(addNewShawaPage)
+				addNewShawaPage.setResult("Некорректный адрес.")
+				show(addNewShawaPage)
 			}
 
 			function onSearchButtonClicked(text) {
@@ -261,7 +261,7 @@ ApplicationWindow {
 				var data = morePage.info
 
 				map.setFocus(data)
-				stackView.push(map)
+				show(map)
 			}
 		}
 
@@ -277,7 +277,7 @@ ApplicationWindow {
 					} else {
 						map.setChecking(true)
 						map.checkAddress(getAddress())
-						stackView.push(map)
+						show(map)
 					}
 				} else {
 					if (validate()) {
@@ -289,7 +289,7 @@ ApplicationWindow {
 
 			onMapButton.onClicked: {
 				map.setSelection(true)
-				stackView.push(map)
+				show(map)
 			}
 		}
 
@@ -308,11 +308,16 @@ ApplicationWindow {
 		id: stackView
 		anchors.fill: parent
 		initialItem: map
+
+		property int currentId: 0
 	}
 
 	function show(item) {
-		stackView.push(item)
-		titleLabel.text = container.titles[item.titleId]
+		if (item.titleId !== stackView.currentId) {
+			stackView.push(item)
+			titleLabel.text = container.titles[item.titleId]
+			stackView.currentId = item.titleId
+		}
 	}
 
 	signal qmlSignal(int type, string message)
@@ -330,7 +335,7 @@ ApplicationWindow {
 			show(map)
 		} else if (type == Type.SHOW_PROFILE) {
 			profilePage.setData(resp)
-			sow(profilePage)
+			show(profilePage)
 		} else if (type == Type.SHOW_FAVOURITE) {
 			favouritePage.setData(resp)
 			show(favouritePage)

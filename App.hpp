@@ -3,9 +3,8 @@
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QVector>
+#include "ServerApi.hpp"
 #include "User.hpp"
-#include "db/DataBase.hpp"
 
 class App : public QGuiApplication
 {
@@ -21,10 +20,11 @@ private:
 	QObject *qmlRoot;
 
 	User *user;
-	DataBase *db;
+	ServerApi *api;
 
 private slots:
 	void qmlSlot(int type, QString message);
+	void processResponse(Message message);
 
 signals:
 	void cppSignal(QVariant type, QVariant data, QVariant result);

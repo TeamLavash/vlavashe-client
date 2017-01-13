@@ -2,24 +2,32 @@
 #define USER_HPP
 
 #include <QJsonDocument>
-#include "db/DataBase.hpp"
+#include <QObject>
+#include "ServerApi.hpp"
 #include "Types.hpp"
 
-class User
+class User : public QObject
 {
+	Q_OBJECT
 public:
-	User(DataBase *dataBase);
+	User(QObject *parent, ServerApi *serverApi);
 	~User();
 
-	Message processRequest(Message message);
+	void processRequest(Message message);
 
 private:
-	DataBase *db;
+	ServerApi *api;
 
 	UserType::U userType;
 
 	QJsonDocument userInfo;
 	QJsonDocument favourites;
+
+private slots:
+	void processResponse(Message message);
+
+signals:
+	void messageReady(Message message);
 };
 
 #endif // USER_HPP
