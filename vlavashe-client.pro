@@ -6,7 +6,6 @@ CONFIG += c++11
 SOURCES += main.cpp \
     App.cpp \
     User.cpp \
-    db/SomeDataBase.cpp \
     ServerApi.cpp
 
 OTHER_FILES += \
@@ -24,9 +23,7 @@ FORMS +=
 HEADERS += \
     App.hpp \
     Types.hpp \
-    db/DataBase.hpp \
     User.hpp \
-    db/SomeDataBase.hpp \
     ServerApi.hpp
 
 DISTFILES += \

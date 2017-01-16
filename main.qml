@@ -52,9 +52,7 @@ ApplicationWindow {
 				}
 
 				onClicked: {
-					stackView.pop()
-					titleLabel.text = container.titles[stackView.currentItem.titleId]
-					stackView.currentId = stackView.currentItem.titleId
+					stackPop()
 				}
 			}
 
@@ -155,13 +153,13 @@ ApplicationWindow {
 			function onSelectMarkerClicked(data) {
 				map.setSelection(false)
 				addNewShawaPage.setAddress(data)
-				show(addNewShawaPage)
+				stackPush(addNewShawaPage)
 			}
 
 			function onCheckMarkerClicked(data) {
 				map.setChecking(false)
 				addNewShawaPage.setCoordinates(data)
-				show(addNewShawaPage)
+				stackPush(addNewShawaPage)
 
 				if (addNewShawaPage.validate()) {
 					var sData = addNewShawaPage.getData()
@@ -171,8 +169,8 @@ ApplicationWindow {
 
 			function checkFailed() {
 				map.setChecking(false)
+				stackPop()
 				addNewShawaPage.setResult("Некорректный адрес.")
-				show(addNewShawaPage)
 			}
 
 			function onSearchButtonClicked(text) {
@@ -261,7 +259,7 @@ ApplicationWindow {
 				var data = morePage.info
 
 				map.setFocus(data)
-				show(map)
+				stackPush(map)
 			}
 		}
 
@@ -272,12 +270,12 @@ ApplicationWindow {
 			addButton.onClicked: {
 				if (byAddress()) {
 					var addr = getAddress()
-					if (addr == "") {
+					if (addr === "") {
 						validate()
 					} else {
 						map.setChecking(true)
+						stackPush(map)
 						map.checkAddress(getAddress())
-						show(map)
 					}
 				} else {
 					if (validate()) {
@@ -289,7 +287,7 @@ ApplicationWindow {
 
 			onMapButton.onClicked: {
 				map.setSelection(true)
-				show(map)
+				stackPush(map)
 			}
 		}
 
@@ -312,11 +310,39 @@ ApplicationWindow {
 		property int currentId: 0
 	}
 
-	function show(item) {
+	function stackPush(item) {
+		print(stackView.currentId, " -> ", item.titleId)
 		if (item.titleId !== stackView.currentId) {
 			stackView.push(item)
 			titleLabel.text = container.titles[item.titleId]
 			stackView.currentId = item.titleId
+		}
+	}
+
+	function stackPop() {
+		var prevId = stackView.get(stackView.depth - 2, true).titleId
+		print(stackView.currentId, " -> ", prevId)
+
+		if (stackView.currentId === 1) {
+			do {
+				stackView.pop()
+			} while (stackView.currentItem.titleId === 2 || stackView.currentItem.titleId === 3)
+			stackView.currentId = stackView.currentItem.titleId
+			titleLabel.text = container.titles[stackView.currentItem.titleId]
+		} else if (prevId >= 2 && prevId <= 4) {
+			stackView.pop()
+			stackView.currentId = stackView.currentItem.titleId
+			qmlSignal(Type.SHOW_PROFILE, "")
+		} else {
+			if (prevId === 7) {
+				map.setChecking(false)
+				map.setFocus(false)
+			}
+
+			stackView.pop()
+			stackView.currentId = stackView.currentItem.titleId
+			titleLabel.text = container.titles[stackView.currentItem.titleId]
+			stackView.currentId = stackView.currentItem.titleId
 		}
 	}
 
@@ -332,31 +358,31 @@ ApplicationWindow {
 
 		if (type == Type.SHOW_MAP) {
 			map.setData(resp)
-			show(map)
+			stackPush(map)
 		} else if (type == Type.SHOW_PROFILE) {
 			profilePage.setData(resp)
-			show(profilePage)
+			stackPush(profilePage)
 		} else if (type == Type.SHOW_FAVOURITE) {
 			favouritePage.setData(resp)
-			show(favouritePage)
+			stackPush(favouritePage)
 		} else if (type == Type.SHOW_ADD_NEW) {
 			addNewShawaPage.reset()
-			show(addNewShawaPage)
+			stackPush(addNewShawaPage)
 		} else if (type == Type.SHOW_SIGN_UP_SIGN_IN) {
-			show(signUpSignInPage)
+			stackPush(signUpSignInPage)
 		} else if (type == Type.SHOW_SIGN_UP) {
 			signUpPage.reset()
-			show(signUpPage)
+			stackPush(signUpPage)
 		} else if (type == Type.SHOW_SIGN_IN) {
 			signInPage.reset()
-			show(signInPage)
+			stackPush(signInPage)
 		} else if (type == Type.SIGN_UP) {
 			signUpPage.setResult(resp.result)
 		} else if (type == Type.SIGN_IN) {
 			if (result == Result.OK) {
 				profilePage.setData(resp)
 				listView.setAddNewShawa(resp.status == User.ADMIN)
-				show(profilePage)
+				stackPush(profilePage)
 			} else {
 				signInPage.setResult(resp.result)
 			}
@@ -365,11 +391,11 @@ ApplicationWindow {
 		} else if (type == Type.MORE) {
 			listView.resetIndex()
 			morePage.setData(resp)
-			show(morePage)
+			stackPush(morePage)
 		} else if (type == Type.SEARCH) {
 			map.setData(resp)
 		} else if (type == Type.LOGOUT) {
-			show(signUpSignInPage)
+			stackPush(signUpSignInPage)
 			listView.setAddNewShawa(false)
 		} else if (type == Type.FAVOURITE_ADD) {
 			if (result == Result.OK) {
@@ -381,7 +407,7 @@ ApplicationWindow {
 			}
 		} else if (type == Type.SHOW_COMMENTS) {
 			commentsPage.setData(resp)
-			show(commentsPage)
+			stackPush(commentsPage)
 		} else if (type == Type.COMMENT_ADD) {
 			if (result == Result.ERROR) {
 				commentsPage.setResult(resp.result)
