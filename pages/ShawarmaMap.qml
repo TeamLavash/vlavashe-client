@@ -135,11 +135,19 @@ Map {
 	}
 
 	function setFocus(info) {
+		var found = false
 		for (var i = 0; i < markers.length; ++i) {
 			if (markers[i].mId == info.id) {
+				found = true
 				map.center = markers[i].coordinate
 				map.zoomLevel = (maximumZoomLevel - minimumZoomLevel)
+				break
 			}
+		}
+
+		if (!found) {
+			addMarker(info.id, QtPositioning.coordinate(info.x, info.y), info.name + "\n" + info.road + ", " + info.house)
+			setFocus(info)
 		}
 	}
 

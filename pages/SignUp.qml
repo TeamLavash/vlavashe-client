@@ -22,7 +22,7 @@ Pane {
 		id: column
 
 		width: parent.width / 2
-		spacing: 30
+		spacing: 10
 
 		anchors.horizontalCenter: parent.horizontalCenter
 

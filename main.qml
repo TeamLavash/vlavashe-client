@@ -29,6 +29,8 @@ ApplicationWindow {
 	header: ToolBar {
 		Material.foreground: "white" // map
 
+		height: parent.height * 0.1
+
 		RowLayout {
 			spacing: 1
 			anchors.fill: parent
@@ -324,9 +326,17 @@ ApplicationWindow {
 		print(stackView.currentId, " -> ", prevId)
 
 		if (stackView.currentId === 1) {
+			print("back profile")
+
 			do {
+				print("stack: ")
+				for (var i = 0; i < stackView.depth; ++i) {
+					print(stackView.get(stackView.depth - i - 1, true).titleId)
+				}
+
+				print("pop", stackView.currentItem.titleId)
 				stackView.pop()
-			} while (stackView.currentItem.titleId === 2 || stackView.currentItem.titleId === 3)
+			} while (stackView.currentItem.titleId >= 1 && stackView.currentItem.titleId <= 3)
 			stackView.currentId = stackView.currentItem.titleId
 			titleLabel.text = container.titles[stackView.currentItem.titleId]
 		} else if (prevId >= 2 && prevId <= 4) {
